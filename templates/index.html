@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🎬 Movie Recommender</title>
+  <style>
+    /* ── Reset & Base ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0f0f1a;
+      color: #e8e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── Header ─────────────────────────────────────────────────── */
+    header {
+      width: 100%;
+      padding: 36px 20px 28px;
+      text-align: center;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+      border-bottom: 2px solid #e94560;
+    }
+
+    header h1 {
+      font-size: 2.6rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      background: linear-gradient(90deg, #e94560, #f5a623);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    header p {
+      margin-top: 8px;
+      color: #9999bb;
+      font-size: 1rem;
+    }
+
+    /* ── Main Container ──────────────────────────────────────────── */
+    main {
+      width: 100%;
+      max-width: 860px;
+      padding: 40px 20px 60px;
+    }
+
+    /* ── Card ────────────────────────────────────────────────────── */
+    .card {
+      background: #1a1a2e;
+      border: 1px solid #2a2a4a;
+      border-radius: 16px;
+      padding: 32px 36px;
+      margin-bottom: 32px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    .card h2 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #c8c8e8;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* ── Form ────────────────────────────────────────────────────── */
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    label {
+      font-size: 0.9rem;
+      color: #9999bb;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    input[list], select {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 10px;
+      border: 1px solid #3a3a5e;
+      background: #0f0f1a;
+      color: #e8e8f0;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input[list]:focus, select:focus {
+      border-color: #e94560;
+      box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.15);
+    }
+
+    button[type="submit"] {
+      padding: 14px 28px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, #e94560, #c0392b);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      letter-spacing: 0.5px;
+    }
+
+    button[type="submit"]:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(233, 69, 96, 0.45);
+    }
+
+    button[type="submit"]:active { transform: translateY(0); }
+
+    /* ── Error ───────────────────────────────────────────────────── */
+    .error-box {
+      background: rgba(233, 69, 96, 0.12);
+      border: 1px solid #e94560;
+      color: #e94560;
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: 0.95rem;
+    }
+
+    /* ── Results ─────────────────────────────────────────────────── */
+    .results-title {
+      font-size: 1rem;
+      color: #9999bb;
+      margin-bottom: 18px;
+    }
+
+    .results-title span {
+      color: #f5a623;
+      font-weight: 700;
+    }
+
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 14px;
+    }
+
+    .movie-card {
+      background: #0f0f1a;
+      border: 1px solid #2a2a4a;
+      border-radius: 12px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: border-color 0.2s, transform 0.2s;
+      cursor: default;
+    }
+
+    .movie-card:hover {
+      border-color: #e94560;
+      transform: translateY(-3px);
+    }
+
+    .rank-badge {
+      min-width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #e94560, #f5a623);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.85rem;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .movie-title-text {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: #e8e8f0;
+      line-height: 1.4;
+    }
+
+    /* ── Footer ──────────────────────────────────────────────────── */
+    footer {
+      margin-top: auto;
+      padding: 20px;
+      color: #555577;
+      font-size: 0.82rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🎬 Movie Recommender</h1>
+  <p>Content-Based Machine Learning &nbsp;·&nbsp; TMDB 5000 Dataset</p>
+</header>
+
+<main>
+
+  <!-- ── Search Card ─────────────────────────────────────────────── -->
+  <div class="card">
+    <h2>🔍 Find Similar Movies</h2>
+
+    <form action="/recommend" method="POST">
+      <div>
+        <label for="movie_title">Type or select a movie title</label>
+        <input
+          list="movie-options"
+          id="movie_title"
+          name="movie_title"
+          placeholder="e.g. Interstellar, The Dark Knight, Avatar…"
+          value="{{ selected_movie or '' }}"
+          autocomplete="off"
+        />
+        <datalist id="movie-options">
+          {% for movie in movie_list %}
+            <option value="{{ movie }}">
+          {% endfor %}
+        </datalist>
+      </div>
+
+      <button type="submit">Get Recommendations →</button>
+    </form>
+  </div>
+
+  <!-- ── Error ───────────────────────────────────────────────────── -->
+  {% if error %}
+  <div class="card">
+    <div class="error-box">⚠️ {{ error }}</div>
+  </div>
+  {% endif %}
+
+  <!-- ── Results ─────────────────────────────────────────────────── -->
+  {% if recommendations %}
+  <div class="card">
+    <h2>🎯 Recommendations</h2>
+    <p class="results-title">
+      Because you watched <span>"{{ selected_movie }}"</span>,
+      you might also enjoy:
+    </p>
+
+    <div class="movie-grid">
+      {% for rec in recommendations %}
+      <div class="movie-card">
+        <div class="rank-badge">{{ loop.index }}</div>
+        <div class="movie-title-text">{{ rec }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+</main>
+
+<footer>
+  Built with Flask &amp; Scikit-learn &nbsp;·&nbsp; TMDB 5000 Dataset
+</footer>
+
+</body>
+</html>
